@@ -4,12 +4,15 @@
 
 Built to satisfy the **Rise In · Stellar — Level 2 (Yellow Belt)** requirements.
 
+**🎥 [Watch the demo video on Loom »](https://www.loom.com/share/602e9d1652694edea987d53f1f175d0f)**
+
 ---
 
 ## 🔗 Submission Info
 
 | | |
 |---|---|
+| **🎥 Demo video** | [Watch on Loom](https://www.loom.com/share/602e9d1652694edea987d53f1f175d0f) |
 | **Deployed contract (Testnet)** | [`CCK7G4YW4SYV5BEGMIHWRMXHRXYHIB7PIWEO76H7FLJAYSOK62DKXKBP`](https://stellar.expert/explorer/testnet/contract/CCK7G4YW4SYV5BEGMIHWRMXHRXYHIB7PIWEO76H7FLJAYSOK62DKXKBP) |
 | **Sample `donate` tx hash** | [`1cec7bd53c1e99840bfd50880c3ec4e0e7affba2b2d7ba9fd237741efc50a3d8`](https://stellar.expert/explorer/testnet/tx/1cec7bd53c1e99840bfd50880c3ec4e0e7affba2b2d7ba9fd237741efc50a3d8) |
 | **Deploy tx hash** | [`97a82189ec0f2d7f12ad6262cf98292a23f1be31e67d62d8ec1f9b5e04e0314a`](https://stellar.expert/explorer/testnet/tx/97a82189ec0f2d7f12ad6262cf98292a23f1be31e67d62d8ec1f9b5e04e0314a) |
