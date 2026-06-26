@@ -1,0 +1,18 @@
+# Rust / Soroban
+target
+.soroban
+.stellar
+
+# Node
+node_modules
+dist
+*.log
+
+# Build artifacts / local
+deploy_err.log
+.contract_id
+.DS_Store
+
+# Playwright
+test-results
+playwright-report
