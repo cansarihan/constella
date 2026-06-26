@@ -1,145 +1,151 @@
-# StellarFund — Soroban Crowdfunding dApp
+# Constella — Soroban Crowdfunding dApp
 
-> Stellar **Soroban** akıllı kontratı üzerinde çalışan, çoklu cüzdan destekli, **gerçek zamanlı** topluluk fonlama uygulaması. Her bağış zincire yazılır, kontrat event'leri canlı olarak akışa düşer ve ilerleme çubuğu anında güncellenir.
+> A multi-wallet, **real-time** community crowdfunding app running on a Stellar **Soroban** smart contract. Every donation is written on-chain, contract events stream into a live feed, and the progress bar updates instantly.
 
-Bu proje **Rise In · Stellar — Level 2 (Yellow Belt)** gereksinimlerini karşılamak için geliştirilmiştir.
+Built to satisfy the **Rise In · Stellar — Level 2 (Yellow Belt)** requirements.
 
 ---
 
-## 🔗 Önemli Bilgiler (Submission)
+## 🔗 Submission Info
 
 | | |
 |---|---|
-| **Deploy edilmiş kontrat (Testnet)** | [`CCK7G4YW4SYV5BEGMIHWRMXHRXYHIB7PIWEO76H7FLJAYSOK62DKXKBP`](https://stellar.expert/explorer/testnet/contract/CCK7G4YW4SYV5BEGMIHWRMXHRXYHIB7PIWEO76H7FLJAYSOK62DKXKBP) |
-| **Örnek `donate` işlem hash'i** | [`1cec7bd53c1e99840bfd50880c3ec4e0e7affba2b2d7ba9fd237741efc50a3d8`](https://stellar.expert/explorer/testnet/tx/1cec7bd53c1e99840bfd50880c3ec4e0e7affba2b2d7ba9fd237741efc50a3d8) |
-| **Deploy işlem hash'i** | [`97a82189ec0f2d7f12ad6262cf98292a23f1be31e67d62d8ec1f9b5e04e0314a`](https://stellar.expert/explorer/testnet/tx/97a82189ec0f2d7f12ad6262cf98292a23f1be31e67d62d8ec1f9b5e04e0314a) |
-| **Ağ** | Stellar Testnet · Soroban RPC |
-| **Bağış token'ı** | Native XLM (Stellar Asset Contract) |
-| **Live demo** | _(opsiyonel — Vercel/Netlify'a deploy edilirse buraya eklenecek)_ |
+| **Deployed contract (Testnet)** | [`CCK7G4YW4SYV5BEGMIHWRMXHRXYHIB7PIWEO76H7FLJAYSOK62DKXKBP`](https://stellar.expert/explorer/testnet/contract/CCK7G4YW4SYV5BEGMIHWRMXHRXYHIB7PIWEO76H7FLJAYSOK62DKXKBP) |
+| **Sample `donate` tx hash** | [`1cec7bd53c1e99840bfd50880c3ec4e0e7affba2b2d7ba9fd237741efc50a3d8`](https://stellar.expert/explorer/testnet/tx/1cec7bd53c1e99840bfd50880c3ec4e0e7affba2b2d7ba9fd237741efc50a3d8) |
+| **Deploy tx hash** | [`97a82189ec0f2d7f12ad6262cf98292a23f1be31e67d62d8ec1f9b5e04e0314a`](https://stellar.expert/explorer/testnet/tx/97a82189ec0f2d7f12ad6262cf98292a23f1be31e67d62d8ec1f9b5e04e0314a) |
+| **Network** | Stellar Testnet · Soroban RPC |
+| **Donation token** | Native XLM (Stellar Asset Contract) |
+| **Live demo** | _(optional — to be added if deployed to Vercel/Netlify)_ |
 
 ---
 
-## 📸 Ekran Görüntüleri
+## 📸 Screenshots
 
-### Mevcut cüzdan seçenekleri (çoklu cüzdan)
-StellarWalletsKit ile Freighter, xBull, Albedo, LOBSTR, Rabet ve Hana desteklenir:
+### Available wallet options (multi-wallet)
+Powered by StellarWalletsKit — Freighter, xBull, Albedo, LOBSTR, Rabet and Hana:
 
-![Cüzdan seçenekleri](docs/screenshots/wallets.png)
+![Wallet options](docs/screenshots/wallets.png)
 
-### Ana ekran — canlı ilerleme & bağış akışı
-![Uygulama](docs/screenshots/app.png)
+### Main screen — live progress & donation feed
+![App](docs/screenshots/app.png)
 
----
+### Transaction status — pending steps
+![Donation pending](docs/screenshots/donate-pending.png)
 
-## ✨ Özellikler
-
-- **Çoklu cüzdan entegrasyonu** — `StellarWalletsKit` ile tek modaldan Freighter / xBull / Albedo / LOBSTR / Rabet / Hana bağlama.
-- **Akıllı kontrattan okuma & yazma** — `donate`, `withdraw`, `get_state`, `get_contribution`.
-- **Gerçek zamanlı event senkronizasyonu** — Soroban RPC `getEvents` ile `DonationEvent` polling; yeni bağışlar animasyonlu olarak akışa düşer ve ilerleme çubuğu canlı güncellenir.
-- **İşlem durumu takibi** — her işlem için `Hazırlanıyor → İmza → Zincire gönderildi → Başarılı/Hata` adımları ve doğrulanabilir explorer linki.
-- **3+ hata tipi yakalama** (aşağıdaki tablo).
-- **Animasyonlu, glassmorphism arayüz** — Framer Motion ile yumuşak geçişler, aurora arka plan, shimmer'lı progress bar.
+### Transaction status — success
+![Donation success](docs/screenshots/donate-success.png)
 
 ---
 
-## 🧯 Yakalanan Hata Tipleri
+## ✨ Features
 
-| Senaryo | Nereden gelir | Kullanıcıya gösterilen |
+- **Multi-wallet integration** — connect Freighter / xBull / Albedo / LOBSTR / Rabet / Hana from a single modal via `StellarWalletsKit`.
+- **Read & write to the smart contract** — `donate`, `withdraw`, `get_state`, `get_contribution`.
+- **Real-time event sync** — polls `DonationEvent` via Soroban RPC `getEvents`; new donations animate into the feed and the progress bar updates live.
+- **Transaction status tracking** — every action shows `Building → Signing → Submitted → Success/Error` steps with a verifiable explorer link.
+- **3+ error types handled** (see table below).
+- **Animated glassmorphism UI** — smooth transitions with Framer Motion, an aurora background and a shimmering progress bar.
+
+---
+
+## 🧯 Handled Error Types
+
+| Scenario | Source | Shown to user |
 |---|---|---|
-| **Cüzdan bulunamadı** | Seçilen cüzdan kurulu/etkin değil | "Cüzdan bulunamadı — kur ve tekrar dene" |
-| **Kullanıcı reddetti** | İmza penceresinde iptal | "İşlem reddedildi" |
-| **Yetersiz bakiye** | XLM yetersiz / underfunded | "Yetersiz bakiye" |
-| **Geçersiz tutar** | Kontrat `InvalidAmount` (`#3`) | "Bağış tutarı 0'dan büyük olmalı" |
-| **Süre doldu** | Kontrat `DeadlinePassed` (`#4`) | "Kampanyanın son tarihi geçti" |
-| **Hedefe ulaşılmadı** | Kontrat `GoalNotReached` (`#5`) | "Hedefe ulaşılmadan fon çekilemez" |
+| **Wallet not found** | Selected wallet not installed/enabled | "Wallet not found — install it and try again" |
+| **User rejected** | Cancelled in the signing window | "Request rejected" |
+| **Insufficient balance** | Not enough XLM / underfunded | "Insufficient balance" |
+| **Invalid amount** | Contract `InvalidAmount` (`#3`) | "Donation amount must be greater than 0" |
+| **Campaign ended** | Contract `DeadlinePassed` (`#4`) | "The campaign deadline has passed" |
+| **Goal not reached** | Contract `GoalNotReached` (`#5`) | "Funds can't be withdrawn before the goal is met" |
 
-Hata eşleme mantığı: [`frontend/src/stellar.ts → parseError()`](frontend/src/stellar.ts).
+Error mapping logic: [`frontend/src/stellar.ts → parseError()`](frontend/src/stellar.ts).
 
 ---
 
-## 🏗️ Mimari
+## 🏗️ Architecture
 
 ```text
 .
-├── contracts/crowdfunding/        # Soroban akıllı kontrat (Rust)
+├── contracts/crowdfunding/        # Soroban smart contract (Rust)
 │   ├── src/lib.rs                 # initialize / donate / withdraw / get_state / get_contribution
-│   └── src/test.rs                # 7 birim testi (hata yolları dahil)
+│   └── src/test.rs                # 7 unit tests (incl. error paths)
 ├── frontend/                      # React + Vite + TypeScript dApp
 │   └── src/
-│       ├── wallet.ts              # StellarWalletsKit (çoklu cüzdan)
-│       ├── stellar.ts             # kontrat çağrıları + event polling + hata eşleme
-│       ├── hooks/useCampaign.ts   # state & event gerçek zamanlı senkronizasyonu
+│       ├── wallet.ts              # StellarWalletsKit (multi-wallet)
+│       ├── stellar.ts             # contract calls + event polling + error mapping
+│       ├── hooks/useCampaign.ts   # real-time state & event sync
 │       └── components/            # CampaignCard, DonatePanel, ActivityFeed, TxStatusModal...
-├── scripts/deploy.sh              # tek komutla deploy + initialize
+├── scripts/deploy.sh              # one-command deploy + initialize
 └── README.md
 ```
 
-### Akıllı kontrat fonksiyonları
+### Smart contract functions
 
-| Fonksiyon | Tip | Açıklama |
+| Function | Type | Description |
 |---|---|---|
-| `initialize(admin, token, title, goal, deadline)` | write | Kampanyayı kurar |
-| `donate(donor, amount)` | write | Token'ı bağışçıdan kontrata aktarır, `DonationEvent` yayar |
-| `withdraw()` | write | Hedefe ulaşıldıysa fonu admin'e aktarır (`WithdrawEvent`) |
-| `get_state()` | read | Hedef, toplanan, bağışçı sayısı, son tarih, durum |
-| `get_contribution(donor)` | read | Bir adresin toplam bağışı |
+| `initialize(admin, token, title, goal, deadline)` | write | Sets up the campaign |
+| `donate(donor, amount)` | write | Transfers token from donor to contract, emits `DonationEvent` |
+| `withdraw()` | write | Transfers funds to admin once the goal is reached (`WithdrawEvent`) |
+| `get_state()` | read | Goal, raised, backers, deadline, status |
+| `get_contribution(donor)` | read | An address's total contribution |
 
 ---
 
-## 🚀 Kurulum
+## 🚀 Setup
 
-### Önkoşullar
+### Prerequisites
 - [Node.js](https://nodejs.org) 18+
-- [Rust](https://rustup.rs) + `wasm32v1-none` hedefi
+- [Rust](https://rustup.rs) + the `wasm32v1-none` target
 - [Stellar CLI](https://developers.stellar.org/docs/tools/cli) 23+
-- Tarayıcıda bir Stellar cüzdanı (örn. [Freighter](https://www.freighter.app/)) — Testnet modunda
+- A Stellar wallet in the browser (e.g. [Freighter](https://www.freighter.app/)) set to **Testnet**
 
-### 1) Frontend'i çalıştır
+### 1) Run the frontend
 ```bash
 cd frontend
 npm install
-cp .env.example .env     # opsiyonel — varsayılan kontrat zaten gömülü
+cp .env.example .env     # optional — the default contract is already baked in
 npm run dev
 ```
-Uygulama `http://localhost:5173` adresinde açılır. Kontrat zaten testnet'e deploy edilmiş olduğu için **ek kuruluma gerek kalmadan** çalışır.
+The app opens at `http://localhost:5173`. The contract is already deployed to testnet, so it works **without any extra setup**.
 
-### 2) (Opsiyonel) Kontratı kendin deploy et
+### 2) (Optional) Deploy the contract yourself
 ```bash
-# kontrat testleri
+# contract tests
 cargo test -p crowdfunding
 
-# tek komutla derle + deploy + initialize (funded testnet kimliği oluşturur)
+# build + deploy + initialize in one command (creates a funded testnet identity)
 ./scripts/deploy.sh
 
-# çıktıdaki CONTRACT_ID'yi frontend/.env içine yaz:
-#   VITE_CONTRACT_ID=<yeni_id>
+# write the printed CONTRACT_ID into frontend/.env:
+#   VITE_CONTRACT_ID=<new_id>
 ```
 
-### 3) Cüzdana testnet XLM al
-[Freighter](https://www.freighter.app/) → ağı **Testnet** yap → "Fund with Friendbot" ile bakiye yükle, sonra uygulamadan bağış yap.
+### 3) Get testnet XLM
+[Freighter](https://www.freighter.app/) → switch network to **Testnet** → "Fund with Friendbot", then donate from the app.
 
 ---
 
-## 🔄 Gerçek zamanlı akış nasıl çalışır?
+## 🔄 How the real-time flow works
 
-1. Kullanıcı bağış yapar → `donate` çağrısı simüle edilir (auth + `prepareTransaction`).
-2. İşlem cüzdanda imzalanır ve ağa gönderilir; durum `pending → success` olarak takip edilir.
-3. Kontrat `DonationEvent { donor, amount, total_raised }` yayar.
-4. Frontend `getEvents`'i 4 sn'de bir cursor ile yoklar; yeni event'ler **canlı akışa** animasyonla düşer ve `get_state` tazelenerek ilerleme çubuğu güncellenir.
-
----
-
-## ✅ Level 2 Gereksinim Kontrolü
-
-- [x] Çoklu cüzdan entegrasyonu (StellarWalletsKit)
-- [x] 3+ hata tipi yakalandı
-- [x] Kontrat testnet'e deploy edildi
-- [x] Kontrat frontend'den çağrıldı
-- [x] İşlem durumu görünür (pending/success/fail)
-- [x] Gerçek zamanlı event entegrasyonu
-- [x] 2+ anlamlı commit
+1. The user donates → the `donate` call is simulated (auth + `prepareTransaction`).
+2. The transaction is signed in the wallet and submitted; status is tracked `pending → success`.
+3. The contract emits `DonationEvent { donor, amount, total_raised }`.
+4. The frontend polls `getEvents` every 4s with a cursor; new events animate into the **live feed** and `get_state` refreshes so the progress bar updates.
 
 ---
 
-## 🛠️ Teknolojiler
+## ✅ Level 2 Requirement Checklist
+
+- [x] Multi-wallet integration (StellarWalletsKit)
+- [x] 3+ error types handled
+- [x] Contract deployed on testnet
+- [x] Contract called from the frontend
+- [x] Transaction status visible (pending/success/fail)
+- [x] Real-time event integration
+- [x] 2+ meaningful commits
+
+---
+
+## 🛠️ Tech Stack
 Rust · Soroban SDK 25 · Stellar CLI · React 19 · Vite · TypeScript · @stellar/stellar-sdk · @creit.tech/stellar-wallets-kit · Framer Motion

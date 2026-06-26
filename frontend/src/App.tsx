@@ -123,7 +123,7 @@ export default function App() {
           <div className="brand">
             <div className="logo">✦</div>
             <div>
-              StellarFund <span className="dim">/ crowdfund</span>
+              Constella <span className="dim">/ crowdfund</span>
             </div>
           </div>
           <div className="topbar-right">
