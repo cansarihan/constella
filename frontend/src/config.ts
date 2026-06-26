@@ -1,7 +1,7 @@
 import { Networks } from "@stellar/stellar-sdk";
 
-// Testnet'e deploy edilmiş crowdfunding kontratı.
-// .env ile VITE_CONTRACT_ID vererek override edilebilir.
+// Crowdfunding contract deployed to testnet.
+// Can be overridden with VITE_CONTRACT_ID in .env.
 export const CONTRACT_ID =
   import.meta.env.VITE_CONTRACT_ID ||
   "CCK7G4YW4SYV5BEGMIHWRMXHRXYHIB7PIWEO76H7FLJAYSOK62DKXKBP";
@@ -11,7 +11,7 @@ export const RPC_URL =
 
 export const NETWORK_PASSPHRASE = Networks.TESTNET;
 
-// State okuması (read-only simülasyon) için kaynak hesap — gerçek imza gerektirmez.
+// Source account for read-only simulation (no real signature required).
 export const READ_SOURCE =
   "GBHD3KOEMQVFNKBSW3ZVM6MMX3GSHM4PNRXI3HJZ6FJ4AUGZFN2ZC5SL";
 
@@ -22,5 +22,5 @@ export const EXPLORER_CONTRACT = (id: string) =>
 export const EXPLORER_ACCOUNT = (id: string) =>
   `https://stellar.expert/explorer/testnet/account/${id}`;
 
-// Native XLM = 7 ondalık (stroop).
+// Native XLM = 7 decimals (stroops).
 export const STROOPS = 10_000_000n;

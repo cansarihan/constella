@@ -135,11 +135,11 @@ export default function App() {
               <div className="addr-chip" title={address}>
                 <span className="av" />
                 {shortAddr(address, 4)}
-                <small onClick={handleDisconnect}>Çıkış</small>
+                <small onClick={handleDisconnect}>Disconnect</small>
               </div>
             ) : (
               <button className="btn connect" onClick={handleConnect}>
-                Cüzdan bağla
+                Connect Wallet
               </button>
             )}
           </div>

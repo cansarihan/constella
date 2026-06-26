@@ -19,7 +19,7 @@ import type { CampaignState, DonationActivity } from "./types";
 export const server = new rpc.Server(RPC_URL, { allowHttp: RPC_URL.startsWith("http://") });
 const contract = new Contract(CONTRACT_ID);
 
-/** get_state'i read-only simülasyonla okur. */
+/** Reads get_state via a read-only simulation. */
 export async function readState(): Promise<CampaignState> {
   const source = new Account(READ_SOURCE, "0");
   const tx = new TransactionBuilder(source, {
@@ -33,7 +33,7 @@ export async function readState(): Promise<CampaignState> {
   const sim = await server.simulateTransaction(tx);
   if (rpc.Api.isSimulationError(sim)) throw new Error(sim.error);
   const retval = sim.result?.retval;
-  if (!retval) throw new Error("Kontrat durumu okunamadı");
+  if (!retval) throw new Error("Failed to read contract state");
   const raw = scValToNative(retval);
   return {
     admin: raw.admin,
@@ -47,7 +47,7 @@ export async function readState(): Promise<CampaignState> {
   };
 }
 
-/** Bir adresin toplam bağışını (stroop) okur. */
+/** Reads an address's total contribution (in stroops). */
 export async function readContribution(donor: string): Promise<bigint> {
   const source = new Account(READ_SOURCE, "0");
   const tx = new TransactionBuilder(source, {
@@ -63,7 +63,7 @@ export async function readContribution(donor: string): Promise<bigint> {
   return retval ? BigInt(scValToNative(retval)) : 0n;
 }
 
-/** donate çağrısını kurar, simüle eder (auth dahil) ve imzaya hazır XDR döner. */
+/** Builds the donate call, simulates it (incl. auth) and returns a sign-ready XDR. */
 export async function buildDonateTx(
   donor: string,
   amountStroops: bigint
@@ -83,12 +83,12 @@ export async function buildDonateTx(
     .setTimeout(120)
     .build();
 
-  // prepareTransaction simüle eder; kontrat hatası / yetersiz bakiye burada yakalanır.
+  // prepareTransaction simulates; contract errors / insufficient balance surface here.
   const prepared = await server.prepareTransaction(tx);
   return prepared.toXDR();
 }
 
-/** withdraw çağrısını kurar ve imzaya hazır XDR döner (sadece admin). */
+/** Builds the withdraw call and returns a sign-ready XDR (admin only). */
 export async function buildWithdrawTx(admin: string): Promise<string> {
   const account = await server.getAccount(admin);
   const tx = new TransactionBuilder(account, {
@@ -102,26 +102,26 @@ export async function buildWithdrawTx(admin: string): Promise<string> {
   return prepared.toXDR();
 }
 
-/** İmzalı XDR'ı ağa gönderir ve sonuç kesinleşene kadar bekler; tx hash döner. */
+/** Sends the signed XDR and waits until it settles; returns the tx hash. */
 export async function submitSigned(signedXdr: string): Promise<string> {
   const tx = TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE);
   const sent = await server.sendTransaction(tx);
 
   if (sent.status === "ERROR") {
-    throw new Error(JSON.stringify(sent.errorResult) || "İşlem reddedildi");
+    throw new Error(JSON.stringify(sent.errorResult) || "Transaction rejected");
   }
 
   const hash = sent.hash;
-  // Kesinleşmeyi bekle (pending → success/fail).
+  // Wait for settlement (pending → success/fail).
   for (let i = 0; i < 30; i++) {
     const res = await server.getTransaction(hash);
     if (res.status === rpc.Api.GetTransactionStatus.SUCCESS) return hash;
     if (res.status === rpc.Api.GetTransactionStatus.FAILED) {
-      throw new Error("İşlem zincirde başarısız oldu (FAILED)");
+      throw new Error("Transaction failed on-chain (FAILED)");
     }
     await new Promise((r) => setTimeout(r, 2000));
   }
-  throw new Error("İşlem zaman aşımına uğradı");
+  throw new Error("Transaction timed out");
 }
 
 export async function getLatestLedger(): Promise<number> {
@@ -129,7 +129,7 @@ export async function getLatestLedger(): Promise<number> {
   return l.sequence;
 }
 
-/** Kontrat event'lerini çeker ve bağış aktivitelerine dönüştürür. */
+/** Fetches contract events and maps them to donation activities. */
 export async function fetchEvents(opts: {
   startLedger?: number;
   cursor?: string;
@@ -162,7 +162,7 @@ export async function fetchEvents(opts: {
         at: ev.ledgerClosedAt,
       });
     } catch {
-      // bilinmeyen event biçimi — atla
+      // unknown event shape — skip
     }
   }
 
@@ -189,14 +189,14 @@ export interface FriendlyError {
   message: string;
 }
 
-/** Ham hatayı kullanıcı dostu, kategorize bir mesaja çevirir. */
+/** Maps a raw error into a user-friendly, categorized message. */
 export function parseError(e: unknown): FriendlyError {
   const raw =
     e instanceof Error ? e.message : typeof e === "string" ? e : JSON.stringify(e);
   const s = (raw || "").toLowerCase();
 
-  if (s.includes("wallet_modal_closed")) {
-    return { kind: "modal_closed", title: "İptal edildi", message: "Cüzdan seçimi kapatıldı." };
+  if (s.includes("wallet_modal_closed") || s.includes("modal closed")) {
+    return { kind: "modal_closed", title: "Cancelled", message: "Wallet selection was closed." };
   }
   if (
     s.includes("not available") ||
@@ -208,8 +208,8 @@ export function parseError(e: unknown): FriendlyError {
   ) {
     return {
       kind: "wallet_not_found",
-      title: "Cüzdan bulunamadı",
-      message: "Seçtiğin cüzdan tarayıcında kurulu/etkin değil. Lütfen kur ve tekrar dene.",
+      title: "Wallet not found",
+      message: "The selected wallet isn't installed/enabled in your browser. Please install it and try again.",
     };
   }
   if (
@@ -221,8 +221,8 @@ export function parseError(e: unknown): FriendlyError {
   ) {
     return {
       kind: "user_rejected",
-      title: "İşlem reddedildi",
-      message: "İşlemi cüzdanında onaylamadın.",
+      title: "Request rejected",
+      message: "You didn't approve the transaction in your wallet.",
     };
   }
   if (
@@ -234,18 +234,18 @@ export function parseError(e: unknown): FriendlyError {
   ) {
     return {
       kind: "insufficient_balance",
-      title: "Yetersiz bakiye",
-      message: "Cüzdanında bu bağış + işlem ücreti için yeterli XLM yok.",
+      title: "Insufficient balance",
+      message: "Your wallet doesn't have enough XLM for this donation plus the network fee.",
     };
   }
   if (s.includes("#3") || s.includes("invalidamount")) {
-    return { kind: "invalid_amount", title: "Geçersiz tutar", message: "Bağış tutarı 0'dan büyük olmalı." };
+    return { kind: "invalid_amount", title: "Invalid amount", message: "Donation amount must be greater than 0." };
   }
   if (s.includes("#4") || s.includes("deadlinepassed")) {
-    return { kind: "deadline_passed", title: "Süre doldu", message: "Kampanyanın son tarihi geçti." };
+    return { kind: "deadline_passed", title: "Campaign ended", message: "The campaign deadline has passed." };
   }
   if (s.includes("#5") || s.includes("goalnotreached")) {
-    return { kind: "goal_not_reached", title: "Hedefe ulaşılmadı", message: "Hedef tutara ulaşılmadan fon çekilemez." };
+    return { kind: "goal_not_reached", title: "Goal not reached", message: "Funds can't be withdrawn before the goal is met." };
   }
-  return { kind: "unknown", title: "Bir hata oluştu", message: raw?.slice(0, 200) || "Bilinmeyen hata" };
+  return { kind: "unknown", title: "Something went wrong", message: raw?.slice(0, 200) || "Unknown error" };
 }

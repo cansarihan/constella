@@ -4,9 +4,9 @@ import { EXPLORER_TX } from "../config";
 import { shortAddr } from "../format";
 
 const STEPS: { key: string; label: string }[] = [
-  { key: "building", label: "İşlem hazırlanıyor & simüle ediliyor" },
-  { key: "signing", label: "Cüzdanda imza bekleniyor" },
-  { key: "pending", label: "Zincire gönderildi, onaylanıyor" },
+  { key: "building", label: "Building & simulating transaction" },
+  { key: "signing", label: "Waiting for wallet signature" },
+  { key: "pending", label: "Submitted, awaiting confirmation" },
 ];
 
 const order = ["building", "signing", "pending"];
@@ -47,15 +47,15 @@ export function TxStatusModal({
                 >
                   ✓
                 </motion.div>
-                <h3>Bağış başarılı!</h3>
-                <p>İşlemin Stellar testnet'te onaylandı.</p>
+                <h3>Donation successful!</h3>
+                <p>Your transaction was confirmed on Stellar testnet.</p>
                 {tx.hash && (
                   <a className="tx-hash" href={EXPLORER_TX(tx.hash)} target="_blank" rel="noreferrer">
                     {shortAddr(tx.hash, 8)} ↗
                   </a>
                 )}
                 <button className="btn" style={{ marginTop: 22 }} onClick={onClose}>
-                  Kapat
+                  Close
                 </button>
               </>
             ) : tx.phase === "error" ? (
@@ -68,17 +68,17 @@ export function TxStatusModal({
                 >
                   ✕
                 </motion.div>
-                <h3>İşlem tamamlanamadı</h3>
+                <h3>Transaction failed</h3>
                 <p>{tx.message}</p>
                 <button className="btn ghost" style={{ width: "100%" }} onClick={onClose}>
-                  Kapat
+                  Close
                 </button>
               </>
             ) : (
               <>
                 <div className="spinner" />
-                <h3>İşlem sürüyor</h3>
-                <p>Lütfen bekle — adımlar aşağıda.</p>
+                <h3>Processing transaction</h3>
+                <p>Please wait — steps below.</p>
                 <div className="tx-steps">
                   {STEPS.map((s, i) => {
                     const cls =

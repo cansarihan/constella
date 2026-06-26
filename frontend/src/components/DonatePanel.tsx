@@ -33,8 +33,8 @@ export function DonatePanel({
 
   return (
     <div className="card panel">
-      <h3>Bağış yap</h3>
-      <div className="hint">Native XLM ile testnet üzerinden destek ol.</div>
+      <h3>Make a donation</h3>
+      <div className="hint">Support this campaign with native XLM on testnet.</div>
 
       <div className="amount-field">
         <input
@@ -64,17 +64,17 @@ export function DonatePanel({
           disabled={!valid || busy || (state ? state.withdrawn : false)}
           onClick={() => onDonate(stroops)}
         >
-          {busy ? "İşleniyor…" : valid ? `${amount} XLM Bağışla` : "Tutar gir"}
+          {busy ? "Processing…" : valid ? `Donate ${amount} XLM` : "Enter an amount"}
         </button>
       ) : (
         <button className="btn connect" style={{ width: "100%" }} onClick={onConnect}>
-          Bağış için cüzdan bağla
+          Connect wallet to donate
         </button>
       )}
 
       {address && (
         <div className="you">
-          <span>Senin toplam katkın</span>
+          <span>Your total contribution</span>
           <b>{formatXLM(myContribution)} XLM</b>
         </div>
       )}
@@ -86,7 +86,7 @@ export function DonatePanel({
           disabled={busy}
           onClick={onWithdraw}
         >
-          Fonu çek ({formatXLM(state.raised)} XLM)
+          Withdraw funds ({formatXLM(state.raised)} XLM)
         </button>
       )}
     </div>

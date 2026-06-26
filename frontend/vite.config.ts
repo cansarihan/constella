@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   define: {
-    // Bazı bağımlılıklar Node "global"ını bekler.
+    // Some dependencies expect Node's "global".
     global: "globalThis",
   },
 })

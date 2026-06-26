@@ -13,20 +13,20 @@ export function ActivityFeed({
   return (
     <div className="card feed">
       <div className="feed-head">
-        <h3>Canlı bağış akışı</h3>
+        <h3>Live donation feed</h3>
         <span className="badge live">
           <span
             className="dot"
             style={{ width: 7, height: 7, borderRadius: "50%", background: "currentColor" }}
           />
-          Gerçek zamanlı
+          Real-time
         </span>
       </div>
 
       {activities.length === 0 ? (
         <div className="empty">
-          Henüz bağış yok — ilk destekleyen sen ol! Yeni bağışlar kontrat
-          event'lerinden anında buraya düşer.
+          No donations yet — be the first to back this campaign! New donations stream
+          in here instantly from contract events.
         </div>
       ) : (
         <div className="feed-list">

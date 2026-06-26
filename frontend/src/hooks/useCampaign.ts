@@ -22,7 +22,7 @@ export function useCampaign() {
       setState(s);
       setError(null);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Durum okunamadı");
+      setError(e instanceof Error ? e.message : "Failed to read state");
     } finally {
       setLoading(false);
     }
@@ -35,7 +35,7 @@ export function useCampaign() {
         startLedger: startLedger.current,
       });
       cursor.current = nextCursor;
-      startLedger.current = undefined; // bundan sonra cursor ile devam
+      startLedger.current = undefined; // continue with cursor from now on
 
       const fresh = incoming.filter((a) => !seen.current.has(a.id));
       if (fresh.length > 0) {
@@ -44,15 +44,15 @@ export function useCampaign() {
           [...fresh.reverse(), ...prev].slice(0, 50)
         );
         setNewActivityId(fresh[0].id);
-        // yeni bağış geldi → state'i hemen tazele
+        // new donation arrived → refresh state immediately
         refreshState();
       }
     } catch {
-      // geçici RPC hatası — sessizce yut, sonraki tur dener
+      // transient RPC error — swallow, next tick retries
     }
   }, [refreshState]);
 
-  // İlk yükleme: state + event başlangıç ledger'ı
+  // Initial load: state + event starting ledger
   useEffect(() => {
     let active = true;
     (async () => {
@@ -61,7 +61,7 @@ export function useCampaign() {
         const latest = await getLatestLedger();
         if (active) startLedger.current = Math.max(latest - 8000, 1);
       } catch {
-        /* yoksay */
+        /* ignore */
       }
       if (active) pollEvents();
     })();
@@ -70,7 +70,7 @@ export function useCampaign() {
     };
   }, [refreshState, pollEvents]);
 
-  // Periyodik polling
+  // Periodic polling
   useEffect(() => {
     const s = setInterval(refreshState, STATE_POLL_MS);
     const e = setInterval(pollEvents, EVENT_POLL_MS);

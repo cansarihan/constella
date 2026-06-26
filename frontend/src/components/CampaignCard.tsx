@@ -22,21 +22,21 @@ export function CampaignCard({ state }: { state: CampaignState | null }) {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div className="eyebrow">Stellar Testnet · Soroban</div>
         {state.withdrawn ? (
-          <span className="badge done">✓ Fon çekildi</span>
+          <span className="badge done">✓ Funds withdrawn</span>
         ) : reached ? (
-          <span className="badge done">🎯 Hedefe ulaşıldı</span>
+          <span className="badge done">🎯 Goal reached</span>
         ) : (
           <span className="badge live">
             <span className="dot" style={{ width: 7, height: 7, borderRadius: "50%", background: "currentColor" }} />
-            Canlı
+            Live
           </span>
         )}
       </div>
 
       <h1>{state.title}</h1>
       <div className="sub">
-        Zincir üstünde, şeffaf ve gerçek zamanlı topluluk fonlaması. Her bağış akıllı
-        kontrata yazılır ve anında herkese yansır.
+        Transparent, on-chain, real-time community funding. Every donation is written
+        to the smart contract and reflected instantly for everyone.
       </div>
 
       <div className="stat-row">
@@ -49,7 +49,7 @@ export function CampaignCard({ state }: { state: CampaignState | null }) {
         >
           {formatXLM(state.raised)} XLM
         </motion.span>
-        <span className="goal">/ {formatXLM(state.goal, 0)} XLM hedef</span>
+        <span className="goal">/ {formatXLM(state.goal, 0)} XLM goal</span>
       </div>
 
       <div className="progress">
@@ -62,22 +62,22 @@ export function CampaignCard({ state }: { state: CampaignState | null }) {
       </div>
       <div className="progress-meta">
         <span>
-          <b>%{progress.toFixed(1)}</b> tamamlandı
+          <b>{progress.toFixed(1)}%</b> funded
         </span>
         <span>{timeLeft(state.deadline)}</span>
       </div>
 
       <div className="pills">
         <div className="pill">
-          <div className="k">Bağışçı</div>
+          <div className="k">Backers</div>
           <div className="v">{state.contributors}</div>
         </div>
         <div className="pill">
-          <div className="k">Toplanan</div>
+          <div className="k">Raised</div>
           <div className="v">{formatXLM(state.raised)} XLM</div>
         </div>
         <div className="pill">
-          <div className="k">Kalan</div>
+          <div className="k">Remaining</div>
           <div className="v">
             {formatXLM(state.raised >= state.goal ? 0n : state.goal - state.raised)} XLM
           </div>

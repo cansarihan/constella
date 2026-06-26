@@ -7,7 +7,7 @@ import { RabetModule } from "@creit.tech/stellar-wallets-kit/modules/rabet";
 import { HanaModule } from "@creit.tech/stellar-wallets-kit/modules/hana";
 import { NETWORK_PASSPHRASE } from "./config";
 
-// Kit static olarak bir kez init edilir — birden çok cüzdan modülü yüklenir.
+// The kit is initialized once (static) with multiple wallet modules.
 StellarWalletsKit.init({
   network: Networks.TESTNET,
   selectedWalletId: XBULL_ID,
@@ -21,13 +21,13 @@ StellarWalletsKit.init({
   ],
 });
 
-/** Cüzdan seçim modalını açar ve seçilen cüzdanın adresini döner. */
+/** Opens the wallet selection modal and returns the chosen wallet's address. */
 export async function connectWallet(): Promise<{ address: string }> {
   const { address } = await StellarWalletsKit.authModal();
   return { address };
 }
 
-/** Verilen XDR'ı seçili cüzdanla imzalar. */
+/** Signs the given XDR with the selected wallet. */
 export async function signXdr(xdr: string, address: string): Promise<string> {
   const { signedTxXdr } = await StellarWalletsKit.signTransaction(xdr, {
     address,

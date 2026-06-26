@@ -5,14 +5,14 @@ export function ContractInfo({ admin }: { admin?: string }) {
   return (
     <div className="card contract-info">
       <div className="kv">
-        <span>Akıllı Kontrat (Testnet)</span>
+        <span>Smart Contract (Testnet)</span>
         <a href={EXPLORER_CONTRACT(CONTRACT_ID)} target="_blank" rel="noreferrer">
           {shortAddr(CONTRACT_ID, 8)} ↗
         </a>
       </div>
       {admin && (
         <div className="kv">
-          <span>Kampanya sahibi</span>
+          <span>Campaign owner</span>
           <a
             href={`https://stellar.expert/explorer/testnet/account/${admin}`}
             target="_blank"
@@ -23,7 +23,7 @@ export function ContractInfo({ admin }: { admin?: string }) {
         </div>
       )}
       <div className="kv">
-        <span>Ağ</span>
+        <span>Network</span>
         <a href="https://soroban-testnet.stellar.org" target="_blank" rel="noreferrer">
           Soroban RPC · Testnet
         </a>
