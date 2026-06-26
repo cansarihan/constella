@@ -61,7 +61,7 @@ fn test_donate_flow() {
     assert_eq!(c.get_state().contributors, 1);
     assert_eq!(c.get_contribution(&donor), 300);
 
-    // Aynı bağışçı tekrar bağış yapınca contributor sayısı artmamalı.
+    // Same donor donating again must not increment the contributor count.
     c.donate(&donor, &200);
     assert_eq!(c.get_state().raised, 500);
     assert_eq!(c.get_state().contributors, 1);
@@ -138,7 +138,7 @@ fn test_withdraw_success() {
     assert_eq!(tc.balance(&admin), 1200);
     assert_eq!(c.get_state().withdrawn, true);
 
-    // İkinci çekim hata vermeli.
+    // A second withdrawal must error.
     let res = c.try_withdraw();
     assert_eq!(res, Err(Ok(Error::AlreadyWithdrawn)));
 }

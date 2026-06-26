@@ -3,7 +3,7 @@ use soroban_sdk::{
     contract, contracterror, contractevent, contractimpl, contracttype, token, Address, Env, String,
 };
 
-/// Her bağışta yayılan event — frontend bunu RPC getEvents ile canlı dinler.
+/// Emitted on every donation — the frontend listens live via RPC getEvents.
 #[contractevent]
 #[derive(Clone)]
 pub struct DonationEvent {
@@ -13,7 +13,7 @@ pub struct DonationEvent {
     pub total_raised: i128,
 }
 
-/// Fon çekildiğinde yayılan event.
+/// Emitted when funds are withdrawn.
 #[contractevent]
 #[derive(Clone)]
 pub struct WithdrawEvent {
@@ -22,7 +22,7 @@ pub struct WithdrawEvent {
     pub amount: i128,
 }
 
-/// Hata tipleri — frontend bunları yakalayıp kullanıcıya gösterir.
+/// Error types — the frontend catches these and shows them to the user.
 #[contracterror]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 #[repr(u32)]
@@ -49,7 +49,7 @@ pub enum DataKey {
     Contribution(Address),
 }
 
-/// get_state ile frontend'e dönen tüm kampanya durumu.
+/// The full campaign state returned to the frontend via get_state.
 #[contracttype]
 #[derive(Clone)]
 pub struct State {
@@ -72,7 +72,7 @@ pub struct CrowdfundingContract;
 
 #[contractimpl]
 impl CrowdfundingContract {
-    /// Kampanyayı kurar: hedef miktar, son tarih, bağış token'ı (testnet'te native XLM SAC).
+    /// Sets up the campaign: goal, deadline, donation token (native XLM SAC on testnet).
     pub fn initialize(
         env: Env,
         admin: Address,
@@ -102,7 +102,7 @@ impl CrowdfundingContract {
         Ok(())
     }
 
-    /// Bağış yapar: token'ı bağışçıdan kontrata aktarır, sayaçları günceller, event yayar.
+    /// Donates: transfers the token from donor to contract, updates counters, emits an event.
     pub fn donate(env: Env, donor: Address, amount: i128) -> Result<i128, Error> {
         let s = env.storage().instance();
         if !s.has(&DataKey::Admin) {
@@ -137,7 +137,7 @@ impl CrowdfundingContract {
         s.set(&DataKey::Raised, &new_raised);
         s.extend_ttl(LIFETIME_THRESHOLD, BUMP_AMOUNT);
 
-        // Real-time event — frontend RPC getEvents ile bunu canlı akıtır.
+        // Real-time event — the frontend streams this live via RPC getEvents.
         DonationEvent {
             donor: donor.clone(),
             amount,
@@ -148,7 +148,7 @@ impl CrowdfundingContract {
         Ok(new_raised)
     }
 
-    /// Hedefe ulaşıldıysa toplanan fonu admin'e aktarır.
+    /// Transfers the raised funds to the admin once the goal is reached.
     pub fn withdraw(env: Env) -> Result<i128, Error> {
         let s = env.storage().instance();
         let admin: Address = s.get(&DataKey::Admin).ok_or(Error::NotInitialized)?;
@@ -177,7 +177,7 @@ impl CrowdfundingContract {
         Ok(raised)
     }
 
-    /// Tüm kampanya durumunu döner.
+    /// Returns the full campaign state.
     pub fn get_state(env: Env) -> Result<State, Error> {
         let s = env.storage().instance();
         if !s.has(&DataKey::Admin) {
@@ -195,7 +195,7 @@ impl CrowdfundingContract {
         })
     }
 
-    /// Bir adresin toplam bağışını döner.
+    /// Returns an address's total contribution.
     pub fn get_contribution(env: Env, donor: Address) -> i128 {
         env.storage()
             .persistent()
